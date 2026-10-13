@@ -27,3 +27,4 @@ test('formatarPreco não devolve NaN para valores em moeda brasileira', () => {
     assert.ok(valor.includes('189,90'))
     assert.ok(!valor.includes('NaN'))
 })
+// 300% de IA aqui fi
