@@ -51,8 +51,8 @@ export default function Carrinho({ carrinho, produtos, clienteAtual, onAdicionar
 
       <div className="carrinho-layout">
         <ul className="lista-carrinho">
-          {itens.map((item) => (
-            <li key={item.produto.id} className="item-carrinho">
+          {itens.map((item, indice) => (
+            <li key={`${item.produto.id}-${indice}`} className="item-carrinho">
               <div className="item-imagem-moldura">
                 <img src={item.produto.image} alt={item.produto.title} />
               </div>
@@ -62,7 +62,7 @@ export default function Carrinho({ carrinho, produtos, clienteAtual, onAdicionar
               </div>
               <span className="item-quantidade">{item.quantidade} un.</span>
               <button className="botao-texto" onClick={() => onRemover(item.produto.id)}>
-                Remover 1
+                Remover
               </button>
             </li>
           ))}
