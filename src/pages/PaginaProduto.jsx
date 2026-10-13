@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router'
-import { formatarPreco } from '../utils/formatarPreco.js'
+import { formatarPreco, normalizarPreco } from '../utils/formatarPreco.js'
 
 export default function PaginaProduto({ produtos, onAdicionar }) {
   const { id } = useParams()
@@ -17,8 +17,15 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
   }
 
   const relacionados = produtos
-    .filter((item) => item.category === produto.category && item.id !== produto.id)
+    .filter(
+      (item) =>
+        item.category === produto.category &&
+        item.id !== produto.id &&
+        normalizarPreco(item.price) > 0
+    )
     .slice(0, 4)
+
+  const indisponivel = produto.estoque === 0 || normalizarPreco(produto.price) <= 0
 
   return (
     <section>
@@ -45,7 +52,7 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
           <button
             className="botao botao-grande"
             onClick={() => onAdicionar(produto)}
-            disabled={produto.estoque === 0}
+            disabled={indisponivel}
           >
             Adicionar ao carrinho
           </button>

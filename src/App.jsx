@@ -9,7 +9,7 @@ import Carrinho from './pages/Carrinho.jsx'
 import Estoque from './pages/Estoque.jsx'
 import { buscarProdutos } from './services/produtos.js'
 import { buscarClientes } from './services/clientes.js'
-import { normalizarProduto } from './utils/formatarPreco.js'
+import { normalizarPreco, normalizarProduto } from './utils/formatarPreco.js'
 
 export default function App() {
   const [produtos, setProdutos] = useState([])
@@ -32,19 +32,27 @@ export default function App() {
   }, [])
 
   function adicionarAoCarrinho(produto) {
-    setCarrinho((atual) => atual.concat(normalizarProduto(produto)))
+    if (!produto) return
+
+    const precoDoProduto = normalizarPreco(produto.price)
+
+    if (precoDoProduto <= 0) {
+      return
+    }
+
+    const produtoNormalizado = normalizarProduto(produto)
+    setCarrinho([...carrinho, produtoNormalizado])
   }
 
   function removerUmaUnidade(produtoId) {
-    setCarrinho((atual) => {
-      const indexParaRemover = atual.findIndex((produto) => produto.id === produtoId)
+    const copia = [...carrinho]
+    const posicao = copia.findIndex((produto) => produto.id === produtoId)
 
-      if (indexParaRemover === -1) {
-        return atual
-      }
+    if (posicao !== -1) {
+      copia.splice(posicao, 1)
+    }
 
-      return atual.filter((produto, indice) => !(produto.id === produtoId && indice === indexParaRemover))
-    })
+    setCarrinho(copia)
   }
 
   const clienteAtual = clientes.find((cliente) => cliente.id === clienteAtualId)

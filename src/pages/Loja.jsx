@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ProdutoCard from '../components/ProdutoCard.jsx'
+import { normalizarPreco } from '../utils/formatarPreco.js'
 
 const CATEGORIAS = [
   { id: 'todas', nome: 'Todas' },
@@ -11,19 +12,15 @@ const CATEGORIAS = [
 
 export default function Loja({ produtos, onAdicionar }) {
   const [categoria, setCategoria] = useState('todas')
-  const [produtosVisiveis, setProdutosVisiveis] = useState(produtos)
 
-  useEffect(() => {
-    const produtosDisponiveis = produtos.filter((produto) => produto.estoque > 0)
+  const produtosDisponiveis = produtos.filter(
+    (produto) => produto.estoque > 0 && normalizarPreco(produto.price) > 0
+  )
 
-    if (categoria === 'todas') {
-      setProdutosVisiveis(produtosDisponiveis)
-    } else {
-      setProdutosVisiveis(
-        produtosDisponiveis.filter((produto) => produto.category === categoria)
-      )
-    }
-  }, [categoria, produtos])
+  const produtosVisiveis =
+    categoria === 'todas'
+      ? produtosDisponiveis
+      : produtosDisponiveis.filter((produto) => produto.category === categoria)
 
   return (
     <section>

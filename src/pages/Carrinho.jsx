@@ -3,19 +3,35 @@ import { Link } from 'react-router'
 import SugestaoItem from '../components/SugestaoItem.jsx'
 import { agruparItens, calcularTotal } from '../utils/carrinho.js'
 import { validarCupom } from '../utils/cupons.js'
-import { formatarPreco } from '../utils/formatarPreco.js'
+import { formatarPreco, normalizarPreco } from '../utils/formatarPreco.js'
 
 export default function Carrinho({ carrinho, produtos, clienteAtual, onAdicionar, onRemover }) {
   const [codigoCupom, setCodigoCupom] = useState('')
   const [cupomAplicado, setCupomAplicado] = useState(null)
   const [mensagemCupom, setMensagemCupom] = useState('')
 
-  const itens = agruparItens(carrinho)
-  const total = calcularTotal(carrinho)
+  const itens = []
+  carrinho.forEach((produto) => {
+    const itemExistente = itens.find((item) => item.produto.id === produto.id)
+    if (itemExistente) {
+      itemExistente.quantidade += 1
+    } else {
+      itens.push({ produto, quantidade: 1 })
+    }
+  })
+
+  let total = 0
+  carrinho.forEach((produto) => {
+    total += Number(produto.price) || 0
+  })
+
   const totalComDesconto = cupomAplicado ? total * (1 - cupomAplicado.desconto) : total
 
   const sugestoes = produtos
-    .filter((produto) => !carrinho.find((item) => item.id === produto.id))
+    .filter(
+      (produto) =>
+        normalizarPreco(produto.price) > 0 && !carrinho.find((item) => item.id === produto.id)
+    )
     .slice(0, 3)
 
   function aplicarCupom(evento) {
