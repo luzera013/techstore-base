@@ -10,6 +10,7 @@ import Estoque from './pages/Estoque'
 import { buscarProdutos } from './services/produtos'
 import { buscarClientes } from './services/clientes'
 
+
 export default function App() {
   const [produtos, setProdutos] = useState([])
   const [carregando, setCarregando] = useState(true)
