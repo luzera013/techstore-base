@@ -1,4 +1,4 @@
-import { formatarPreco } from '../utils/formatarPreco'
+import { formatarPreco } from '../utils/formatarPreco.js'
 
 export default function SugestaoItem({ produto, onAdicionar }) {
   return (

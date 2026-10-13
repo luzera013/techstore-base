@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import ProdutoCard from '../components/ProdutoCard'
+import ProdutoCard from '../components/ProdutoCard.jsx'
 
 const CATEGORIAS = [
   { id: 'todas', nome: 'Todas' },

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import RolarParaTopo from './components/RolarParaTopo'
-import Loja from './pages/Loja'
-import PaginaProduto from './pages/PaginaProduto'
-import Carrinho from './pages/Carrinho'
-import Estoque from './pages/Estoque'
-import { buscarProdutos } from './services/produtos'
-import { buscarClientes } from './services/clientes'
-
+import Header from './components/Header.jsx'
+import Footer from './components/Footer.jsx'
+import RolarParaTopo from './components/RolarParaTopo.jsx'
+import Loja from './pages/Loja.jsx'
+import PaginaProduto from './pages/PaginaProduto.jsx'
+import Carrinho from './pages/Carrinho.jsx'
+import Estoque from './pages/Estoque.jsx'
+import { buscarProdutos } from './services/produtos.js'
+import { buscarClientes } from './services/clientes.js'
+import { normalizarProduto } from './utils/formatarPreco.js'
 
 export default function App() {
   const [produtos, setProdutos] = useState([])
@@ -21,7 +21,7 @@ export default function App() {
 
   useEffect(() => {
     buscarProdutos()
-      .then((dados) => setProdutos(dados))
+      .then((dados) => setProdutos(dados.map(normalizarProduto)))
       .catch(() => setErro('Não foi possível carregar os produtos.'))
       .finally(() => setCarregando(false))
 
@@ -32,14 +32,14 @@ export default function App() {
   }, [])
 
   function adicionarAoCarrinho(produto) {
-    setCarrinho(carrinho.concat(produto))
+    setCarrinho((atual) => atual.concat(normalizarProduto(produto)))
   }
 
   function removerUmaUnidade(produtoId) {
     // Remove só a primeira unidade encontrada do produto
     let removido = false
-    setCarrinho(
-      carrinho.filter((produto) => {
+    setCarrinho((atual) =>
+      atual.filter((produto) => {
         if (!removido && produto.id === produtoId) {
           removido = true
           return false

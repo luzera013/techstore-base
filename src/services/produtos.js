@@ -1,4 +1,4 @@
-import { get } from './api'
+import { get } from './api.js'
 
 // Formato dos produtos documentado em docs/api.md
 export function buscarProdutos() {
